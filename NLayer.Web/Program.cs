@@ -6,13 +6,17 @@ using NLayer.Repository;
 using NLayer.Service.Mapping;
 using NLayer.Service.Validations;
 using NLayer.Web;
+using NLayer.Web.Middleware;
 using NLayer.Web.Modules;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.AddLog4Net("log4net.config");
+
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<ProductDtoValidator>());
+builder.Services.AddMemoryCache();
 builder.Services.AddAutoMapper(typeof(MapProfile));
 builder.Services.AddDbContext<AppDbContext>(x =>
 {
@@ -22,6 +26,8 @@ builder.Services.AddDbContext<AppDbContext>(x =>
     });
 });
 
+
+
 builder.Services.AddScoped(typeof(NotFoundFilter<>));
 
 builder.Host.UseServiceProviderFactory
@@ -30,7 +36,10 @@ builder.Host.ConfigureContainer<ContainerBuilder>(x => x.RegisterModule(new Repo
 
 
 var app = builder.Build();
-app.UseExceptionHandler("/Home/Error");
+
+app.UseMiddleware<ExceptionMiddleware>();
+
+//app.UseExceptionHandler("/Home/Error");
 
 
 // Configure the HTTP request pipeline.

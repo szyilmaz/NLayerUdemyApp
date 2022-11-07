@@ -2,11 +2,14 @@
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Caching.Memory;
 using NLayer.Core;
 using NLayer.Core.DTOs;
 using NLayer.Core.Services;
 using NLayer.Core.UnitOfWorks;
 using NLayer.Service.Services;
+using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace NLayer.Web.Controllers
 {
@@ -16,18 +19,35 @@ namespace NLayer.Web.Controllers
         private readonly IDersService _dersService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMemoryCache _memCache;
+        const string cacheKey = "catalogKey";
 
-        public OgrenciController(IOgrenciService ogrenciService, IDersService dersService, IMapper mapper, IUnitOfWork unitOfWork)
+        public OgrenciController(IOgrenciService ogrenciService, IDersService dersService, IMapper mapper, IUnitOfWork unitOfWork, IMemoryCache memCache)
         {
             _ogrenciService = ogrenciService;
             _dersService = dersService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _memCache = memCache;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await _ogrenciService.GetOgrenciWithDers());
+            var veri = new List<OgrenciWithDersDto>();
+
+            if (!_memCache.TryGetValue(cacheKey, out veri))
+            {
+                //Burada cache için belirli ayarlamaları yapıyoruz.Cache süresi,önem derecesi gibi
+                var cacheExpOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpiration = DateTime.Now.AddMinutes(30),
+                    Priority = CacheItemPriority.Normal
+                };
+                //Bu satırda belirlediğimiz key'e göre ve ayarladığımız cache özelliklerine göre kategorilerimizi in-memory olarak cache'liyoruz.
+                veri = await _ogrenciService.GetOgrenciWithDers();
+                _memCache.Set(cacheKey, veri, cacheExpOptions);
+            }
+            return View(veri);
         }
 
         public async Task<IActionResult> Save()
@@ -95,5 +115,27 @@ namespace NLayer.Web.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        private Expression<Func<TData, bool>> CreateFilter<TData, TKey>(Expression<Func<TData, TKey>> selector, TKey valueToCompare)
+        {
+            var parameter = Expression.Parameter(typeof(TData));
+            var expressionParameter = Expression.Property(parameter, GetParameterName(selector));
+
+            var body = Expression.GreaterThan(expressionParameter, Expression.Constant(valueToCompare, typeof(TKey)));
+            return Expression.Lambda<Func<TData, bool>>(body, parameter);
+        }
+
+        private string GetParameterName<TData, TKey>(Expression<Func<TData, TKey>> expression)
+        {
+            if (!(expression.Body is MemberExpression memberExpression))
+            {
+                memberExpression = ((UnaryExpression)expression.Body).Operand as MemberExpression;
+            }
+
+            return memberExpression.ToString().Substring(2);
+        }
     }
+
+    
+
 }
