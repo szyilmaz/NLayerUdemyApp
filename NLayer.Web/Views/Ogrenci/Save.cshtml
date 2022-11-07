@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Save";
+}
+@model OgrenciDto
+<h1>Save Ogrenci</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Save" asp-controller="Ogrenci" method="post">
+            <div class="form-group">
+                <label asp-for="Adi"></label>
+                <input asp-for="Adi" class="form-control" />
+                <span asp-validation-for="Adi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Soyadi"></label>
+                <input asp-for="Soyadi" class="form-control" />
+                <span asp-validation-for="Soyadi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a class="btn btn-default" asp-controller="Ogrenci" asp-action="Index">Listeye Geri Dön</a>
+            </div>
+        </form>
+    </div>
+</div>
+
