@@ -31,23 +31,53 @@ namespace NLayer.Web.Controllers
             _memCache = memCache;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString, List<DersCheckedDto> dersler)
         {
+            //throw new Exception("HELLOO");
+
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["SurnameSortParm"] = sortOrder == "Surname" ? "surname_desc" : "Surname";
+            ViewData["CurrentFilter"] = searchString;
+
+            OgrenciIndexDto viewData = new OgrenciIndexDto();
+
             var veri = new List<OgrenciWithDersDto>();
 
-            if (!_memCache.TryGetValue(cacheKey, out veri))
-            {
-                //Burada cache için belirli ayarlamaları yapıyoruz.Cache süresi,önem derecesi gibi
-                var cacheExpOptions = new MemoryCacheEntryOptions
-                {
-                    AbsoluteExpiration = DateTime.Now.AddMinutes(30),
-                    Priority = CacheItemPriority.Normal
-                };
+            OgrenciFilterDto filter = new OgrenciFilterDto();
+            filter.SortOrder = sortOrder;
+            filter.Keyword = searchString;
+            filter.Dersler = dersler;
+
+            //if (!_memCache.TryGetValue(cacheKey, out veri))
+            //{
+            //    //Burada cache için belirli ayarlamaları yapıyoruz.Cache süresi,önem derecesi gibi
+            //    var cacheExpOptions = new MemoryCacheEntryOptions
+            //    {
+            //        AbsoluteExpiration = DateTime.Now.AddMinutes(30),
+            //        Priority = CacheItemPriority.Normal
+            //    };
                 //Bu satırda belirlediğimiz key'e göre ve ayarladığımız cache özelliklerine göre kategorilerimizi in-memory olarak cache'liyoruz.
-                veri = await _ogrenciService.GetOgrenciWithDers();
-                _memCache.Set(cacheKey, veri, cacheExpOptions);
+                veri = await _ogrenciService.GetOgrenciWithDers(filter);
+            //    _memCache.Set(cacheKey, veri, cacheExpOptions);
+            //}
+
+            var derslerEnt = await _dersService.GetAllAsync();
+            var derslerDto = _mapper.Map<List<DersDto>>(derslerEnt.ToList());
+            var checkedDersler = _mapper.Map<List<DersCheckedDto>>(derslerDto);
+
+            viewData.Ogrenciler = veri.ToList();
+
+            if (dersler != null && dersler.Count > 0)
+            {
+                foreach (var item in dersler.Where(c=>c.Checked))
+                {
+                    checkedDersler.Where(c => c.Id == item.Id).FirstOrDefault().Checked = true;
+                }
             }
-            return View(veri);
+
+            viewData.Dersler = checkedDersler;
+
+            return View(viewData);
         }
 
         public async Task<IActionResult> Save()
@@ -135,7 +165,4 @@ namespace NLayer.Web.Controllers
             return memberExpression.ToString().Substring(2);
         }
     }
-
-    
-
 }

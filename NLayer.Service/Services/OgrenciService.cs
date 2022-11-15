@@ -31,6 +31,13 @@ namespace NLayer.Service.Services
             return dataDto;
         }
 
+        public async Task<List<OgrenciWithDersDto>> GetOgrenciWithDers(OgrenciFilterDto filter)
+        {
+            var data = await _ogrenciRepository.GetOgrenciWithDers(filter);
+            var dataDto = _mapper.Map<List<OgrenciWithDersDto>>(data);
+            return dataDto;
+        }
+
         public async Task AddDersToOgrenci(OgrenciDersSaveDto dto)
         {
             var ogrenci = await _repository.GetByIdAsync(dto.OgrenciId);

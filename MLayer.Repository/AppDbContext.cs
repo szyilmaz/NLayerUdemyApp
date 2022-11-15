@@ -19,6 +19,8 @@ namespace NLayer.Repository
         public DbSet<Ders> Dersler { get; set; }
         public DbSet<OgrenciDers> OgrenciDersleri { get; set; }
 
+        public DbSet<Ogretmen> Ogretmen { get; set; }
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             foreach (var item in ChangeTracker.Entries())

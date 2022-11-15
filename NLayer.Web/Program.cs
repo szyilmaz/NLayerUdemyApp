@@ -26,8 +26,6 @@ builder.Services.AddDbContext<AppDbContext>(x =>
     });
 });
 
-
-
 builder.Services.AddScoped(typeof(NotFoundFilter<>));
 
 builder.Host.UseServiceProviderFactory
@@ -39,8 +37,7 @@ var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
 
-//app.UseExceptionHandler("/Home/Error");
-
+app.UseExceptionHandler("/Home/Error");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

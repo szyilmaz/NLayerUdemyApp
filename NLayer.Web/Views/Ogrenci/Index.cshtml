@@ -1,20 +1,47 @@
 ﻿@{
     ViewData["Title"] = "Index";
 }
-@model List<OgrenciWithDersDto>
-<a class="btn btn-primary" asp-controller="Ogrenci" asp-action="Save">Yeni Öğrenci</a>
+@model OgrenciIndexDto
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" placeholder="Ad, Soyad" />
+            <div class="form-group">
+            @for (int i = 0; i < Model.Dersler.Count; i++)
+            {
+                <input type="checkbox" asp-for="@Model.Dersler[i].Checked" checked="@Model.Dersler[i].Checked" />
+                <label for="chk_@Model.Dersler[i].Adi">@Model.Dersler[i].Adi</label>
+                <br>
+                @Html.HiddenFor(x => @Model.Dersler[i].Id)
+                @Html.HiddenFor(y => @Model.Dersler[i].Adi)
+            }
+            </div>
+
+            <input type="submit" value="Ara" class="btn btn-secondary" /> 
+            <a asp-action="Index" class="btn btn-secondary">Listeye Dön</a>
+        </p>
+    </div>
+</form>
+
+<div style="text-align:right">
+    <a class="btn btn-primary" asp-controller="Ogrenci" asp-action="Save">Yeni Öğrenci</a>
+</div>
+
 <table class="table table-striped">
     <thead>
         <tr>
-            <td>Id</td>
-            <td>Adı</td>
-            <td>Soyadı</td>
-            <td>Dersler</td>
-            <td>Actions</td>
+            <th>Id</th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">Adı</a>
+                </th>
+            <th><a asp-action="Index" asp-route-sortOrder="@ViewData["SurnameSortParm"]">Soyadi</a></th>
+            <th>Dersler</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-       @foreach (var item in Model)
+       @foreach (var item in Model.Ogrenciler)
         {
             <tr>
                 <td>@item.Id</td>
