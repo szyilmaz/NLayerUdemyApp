@@ -14,16 +14,6 @@ namespace NLayer.Service.Mapping
             CreateMap<ProductUpdateDto, Product>();
             CreateMap<Product, ProductWithCategoryDto>();
             CreateMap<Category, CategoryWithProductsDto>();
-
-            CreateMap<Ogrenci, OgrenciDto>().ReverseMap();
-            CreateMap<Ogrenci, OgrenciUpdateWithDersDto>().ReverseMap();
-            CreateMap<Ogrenci, OgrenciWithDersDto>();
-            CreateMap<Ders, DersDto>().ReverseMap();
-            CreateMap<DersDto, DersCheckedDto>().ReverseMap();
-            CreateMap<Ders, DersWithOgrenciDto>();
-            CreateMap<OgrenciDers, OgrenciDersDto>().ReverseMap();
-            CreateMap<OgrenciDers, DersOgrenciDto>();
-            CreateMap<OgrenciDers, OgrenciDersSaveDto>().ReverseMap();
         }
     }
 }

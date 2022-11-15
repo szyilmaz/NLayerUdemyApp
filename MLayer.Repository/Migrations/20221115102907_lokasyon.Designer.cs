@@ -12,8 +12,8 @@ using NLayer.Repository;
 namespace NLayer.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221108111912_ogretmenAdded")]
-    partial class ogretmenAdded
+    [Migration("20221115102907_lokasyon")]
+    partial class lokasyon
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -48,87 +48,7 @@ namespace NLayer.Repository.Migrations
                     b.ToTable("Categories", (string)null);
                 });
 
-            modelBuilder.Entity("NLayer.Core.Ders", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Adi")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Dersler", (string)null);
-                });
-
-            modelBuilder.Entity("NLayer.Core.Ogrenci", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Adi")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Soyadi")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Ogrenciler", (string)null);
-                });
-
-            modelBuilder.Entity("NLayer.Core.OgrenciDers", b =>
-                {
-                    b.Property<int>("OgrenciId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DersId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("OgrenciId", "DersId");
-
-                    b.HasIndex("DersId");
-
-                    b.ToTable("OgrenciDersleri");
-                });
-
-            modelBuilder.Entity("NLayer.Core.Ogretmen", b =>
+            modelBuilder.Entity("NLayer.Core.Entities.Banka", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -139,18 +59,117 @@ namespace NLayer.Repository.Migrations
                     b.Property<string>("Adi")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.HasKey("Id");
 
-                    b.Property<string>("Soyadi")
-                        .HasColumnType("nvarchar(max)");
+                    b.ToTable("Bankalar");
+                });
 
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
+            modelBuilder.Entity("NLayer.Core.Entities.Hareket", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("HesapId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Tipi")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Tutar")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ogretmen");
+                    b.HasIndex("HesapId");
+
+                    b.ToTable("Hareketler");
+                });
+
+            modelBuilder.Entity("NLayer.Core.Entities.Hesap", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Kodu")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("MusteriId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SubeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MusteriId");
+
+                    b.HasIndex("SubeId");
+
+                    b.ToTable("Hesaplar");
+                });
+
+            modelBuilder.Entity("NLayer.Core.Entities.Lokasyon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Adi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Lokasyonlar");
+                });
+
+            modelBuilder.Entity("NLayer.Core.Entities.Musteri", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AdiSoyadi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Musteriler");
+                });
+
+            modelBuilder.Entity("NLayer.Core.Entities.Sube", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Adi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("BankaId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LokasyonId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BankaId");
+
+                    b.HasIndex("LokasyonId");
+
+                    b.ToTable("Subeler");
                 });
 
             modelBuilder.Entity("NLayer.Core.Product", b =>
@@ -216,23 +235,35 @@ namespace NLayer.Repository.Migrations
                     b.ToTable("ProductFeatures");
                 });
 
-            modelBuilder.Entity("NLayer.Core.OgrenciDers", b =>
+            modelBuilder.Entity("NLayer.Core.Entities.Hareket", b =>
                 {
-                    b.HasOne("NLayer.Core.Ders", "Ders")
-                        .WithMany("DersOgrencileri")
-                        .HasForeignKey("DersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("NLayer.Core.Entities.Hesap", null)
+                        .WithMany("Hareketler")
+                        .HasForeignKey("HesapId");
+                });
 
-                    b.HasOne("NLayer.Core.Ogrenci", "Ogrenci")
-                        .WithMany("OgrenciDersleri")
-                        .HasForeignKey("OgrenciId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            modelBuilder.Entity("NLayer.Core.Entities.Hesap", b =>
+                {
+                    b.HasOne("NLayer.Core.Entities.Musteri", null)
+                        .WithMany("Hesaplar")
+                        .HasForeignKey("MusteriId");
 
-                    b.Navigation("Ders");
+                    b.HasOne("NLayer.Core.Entities.Sube", null)
+                        .WithMany("Hesaplar")
+                        .HasForeignKey("SubeId");
+                });
 
-                    b.Navigation("Ogrenci");
+            modelBuilder.Entity("NLayer.Core.Entities.Sube", b =>
+                {
+                    b.HasOne("NLayer.Core.Entities.Banka", null)
+                        .WithMany("Subeler")
+                        .HasForeignKey("BankaId");
+
+                    b.HasOne("NLayer.Core.Entities.Lokasyon", "Lokasyon")
+                        .WithMany()
+                        .HasForeignKey("LokasyonId");
+
+                    b.Navigation("Lokasyon");
                 });
 
             modelBuilder.Entity("NLayer.Core.Product", b =>
@@ -262,14 +293,24 @@ namespace NLayer.Repository.Migrations
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("NLayer.Core.Ders", b =>
+            modelBuilder.Entity("NLayer.Core.Entities.Banka", b =>
                 {
-                    b.Navigation("DersOgrencileri");
+                    b.Navigation("Subeler");
                 });
 
-            modelBuilder.Entity("NLayer.Core.Ogrenci", b =>
+            modelBuilder.Entity("NLayer.Core.Entities.Hesap", b =>
                 {
-                    b.Navigation("OgrenciDersleri");
+                    b.Navigation("Hareketler");
+                });
+
+            modelBuilder.Entity("NLayer.Core.Entities.Musteri", b =>
+                {
+                    b.Navigation("Hesaplar");
+                });
+
+            modelBuilder.Entity("NLayer.Core.Entities.Sube", b =>
+                {
+                    b.Navigation("Hesaplar");
                 });
 
             modelBuilder.Entity("NLayer.Core.Product", b =>

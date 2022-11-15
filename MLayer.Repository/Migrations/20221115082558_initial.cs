@@ -25,37 +25,6 @@ namespace NLayer.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Dersler",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Adi = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Dersler", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Ogrenciler",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Adi = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Soyadi = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ogrenciler", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -75,34 +44,6 @@ namespace NLayer.Repository.Migrations
                         name: "FK_Products_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OgrenciDersleri",
-                columns: table => new
-                {
-                    OgrenciId = table.Column<int>(type: "int", nullable: false),
-                    DersId = table.Column<int>(type: "int", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OgrenciDersleri", x => new { x.OgrenciId, x.DersId });
-                    table.ForeignKey(
-                        name: "FK_OgrenciDersleri_Dersler_DersId",
-                        column: x => x.DersId,
-                        principalTable: "Dersler",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_OgrenciDersleri_Ogrenciler_OgrenciId",
-                        column: x => x.OgrenciId,
-                        principalTable: "Ogrenciler",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -130,11 +71,6 @@ namespace NLayer.Repository.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_OgrenciDersleri_DersId",
-                table: "OgrenciDersleri",
-                column: "DersId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProductFeatures_ProductId",
                 table: "ProductFeatures",
                 column: "ProductId",
@@ -149,16 +85,7 @@ namespace NLayer.Repository.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "OgrenciDersleri");
-
-            migrationBuilder.DropTable(
                 name: "ProductFeatures");
-
-            migrationBuilder.DropTable(
-                name: "Dersler");
-
-            migrationBuilder.DropTable(
-                name: "Ogrenciler");
 
             migrationBuilder.DropTable(
                 name: "Products");

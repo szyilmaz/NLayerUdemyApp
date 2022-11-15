@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NLayer.Core;
+using NLayer.Core.Entities;
 using System.Reflection;
 
 namespace NLayer.Repository
@@ -15,11 +16,15 @@ namespace NLayer.Repository
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductFeature> ProductFeatures { get; set; }
 
-        public DbSet<Ogrenci> Ogrenciler { get; set; }
-        public DbSet<Ders> Dersler { get; set; }
-        public DbSet<OgrenciDers> OgrenciDersleri { get; set; }
-
-        public DbSet<Ogretmen> Ogretmen { get; set; }
+        public DbSet<Banka> Bankalar { get; set; }
+        public DbSet<Sube> Subeler { get; set; }
+        public DbSet<Hesap> Hesaplar { get; set; }
+        public DbSet<Musteri> Musteriler { get; set; }
+        public DbSet<Hareket> Hareketler { get; set; }
+        public DbSet<Lokasyon> Lokasyonlar { get; set; }
+        public DbSet<DovizTipi> DovizTipleri { get; set; }
+        public DbSet<HareketTipi> HareketTipleri { get; set; }
+        public DbSet<HesapTipi> HesapTipleri { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -74,26 +79,6 @@ namespace NLayer.Repository
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
-            //modelBuilder.Entity<ProductFeature>().HasData
-            //    (
-            //        new ProductFeature()
-            //        {
-            //            Id = 1,
-            //            Color = "Kırmızı",
-            //            Height = 100,
-            //            Width = 200,
-            //            ProductId = 1
-            //        },
-            //        new ProductFeature()
-            //        {
-            //            Id = 2,
-            //            Color = "Mavi",
-            //            Height = 300,
-            //            Width = 400,
-            //            ProductId = 2
-            //        }
-            //    );
 
             base.OnModelCreating(modelBuilder);
         }
