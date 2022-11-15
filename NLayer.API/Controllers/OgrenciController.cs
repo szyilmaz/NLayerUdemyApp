@@ -11,7 +11,7 @@ namespace NLayer.API.Controllers
 {
     public class OgrenciController : CustomBaseController
     {
-        private readonly IMapper _mapper;
+        private readonly IMapper _mapper; 
         private readonly IOgrenciService _ogrenciService;
 
         public OgrenciController(IMapper mapper, IOgrenciService ogrenciService)
