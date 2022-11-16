@@ -12,5 +12,9 @@ namespace NLayer.Core.Entities
         public List<HesapTipi> HesapTipleri { get; set; }
         public DovizTipi DovizTipi { get; set; }
         public List<Hareket> Hareketler { get; set; }
+        public int MusteriId { get; set; }
+        public Musteri Musteri { get; set; }
+        public int SubeId { get; set; }
+        public Sube Sube { get; set; }
     }
 }

@@ -34,7 +34,7 @@ namespace NLayer.Repository.Migrations
 
                     b.HasIndex("HesaplarId");
 
-                    b.ToTable("HesapHesapTipi");
+                    b.ToTable("HesapHesapTipi", (string)null);
                 });
 
             modelBuilder.Entity("NLayer.Core.Category", b =>
@@ -74,7 +74,7 @@ namespace NLayer.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Bankalar");
+                    b.ToTable("Bankalar", (string)null);
                 });
 
             modelBuilder.Entity("NLayer.Core.Entities.DovizTipi", b =>
@@ -90,7 +90,7 @@ namespace NLayer.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DovizTipleri");
+                    b.ToTable("DovizTipleri", (string)null);
                 });
 
             modelBuilder.Entity("NLayer.Core.Entities.Hareket", b =>
@@ -122,7 +122,7 @@ namespace NLayer.Repository.Migrations
 
                     b.HasIndex("HesapId");
 
-                    b.ToTable("Hareketler");
+                    b.ToTable("Hareketler", (string)null);
                 });
 
             modelBuilder.Entity("NLayer.Core.Entities.HareketTipi", b =>
@@ -138,7 +138,7 @@ namespace NLayer.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HareketTipleri");
+                    b.ToTable("HareketTipleri", (string)null);
                 });
 
             modelBuilder.Entity("NLayer.Core.Entities.Hesap", b =>
@@ -169,7 +169,7 @@ namespace NLayer.Repository.Migrations
 
                     b.HasIndex("SubeId");
 
-                    b.ToTable("Hesaplar");
+                    b.ToTable("Hesaplar", (string)null);
                 });
 
             modelBuilder.Entity("NLayer.Core.Entities.HesapTipi", b =>
@@ -185,7 +185,7 @@ namespace NLayer.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HesapTipleri");
+                    b.ToTable("HesapTipleri", (string)null);
                 });
 
             modelBuilder.Entity("NLayer.Core.Entities.Lokasyon", b =>
@@ -201,7 +201,7 @@ namespace NLayer.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Lokasyonlar");
+                    b.ToTable("Lokasyonlar", (string)null);
                 });
 
             modelBuilder.Entity("NLayer.Core.Entities.Musteri", b =>
@@ -220,7 +220,7 @@ namespace NLayer.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Musteriler");
+                    b.ToTable("Musteriler", (string)null);
                 });
 
             modelBuilder.Entity("NLayer.Core.Entities.Sube", b =>
@@ -251,7 +251,7 @@ namespace NLayer.Repository.Migrations
 
                     b.HasIndex("SubeTipiId");
 
-                    b.ToTable("Subeler");
+                    b.ToTable("Subeler", (string)null);
                 });
 
             modelBuilder.Entity("NLayer.Core.Entities.SubeTipi", b =>
@@ -267,7 +267,7 @@ namespace NLayer.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SubeTipleri");
+                    b.ToTable("SubeTipleri", (string)null);
                 });
 
             modelBuilder.Entity("NLayer.Core.Product", b =>
@@ -330,7 +330,7 @@ namespace NLayer.Repository.Migrations
                     b.HasIndex("ProductId")
                         .IsUnique();
 
-                    b.ToTable("ProductFeatures");
+                    b.ToTable("ProductFeatures", (string)null);
                 });
 
             modelBuilder.Entity("HesapHesapTipi", b =>

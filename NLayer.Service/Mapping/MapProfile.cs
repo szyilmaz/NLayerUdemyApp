@@ -29,6 +29,8 @@ namespace NLayer.Service.Mapping
             CreateMap<Hareket, HareketDto>()
                 .ForMember(dto => dto.HareketTipi, ent => ent.MapFrom(p => p.HareketTipi));
 
+            CreateMap<Musteri, MusteriDto>();
+
             CreateMap<HareketTipi, HareketTipiDto>();
         }
     }

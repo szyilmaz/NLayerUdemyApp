@@ -11,6 +11,7 @@ namespace NLayer.Core.Entities
         public string Adi { get; set; }
         public Lokasyon Lokasyon { get; set; }
         public SubeTipi SubeTipi { get; set; }
+        public int BankaId { get; set; }
         public List<Hesap> Hesaplar { get; set; }
     }
 }
