@@ -1,18 +1,26 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NLayer.Core.DTOs;
-using NLayer.Core;
 using NLayer.Core.Services;
-using NLayer.API.Filters;
 
-namespace NLayer.API.Controllers
+namespace NLayer.API.Controllers;
+
+public class BankaController : CustomBaseController
 {
-    public class BankaController : CustomBaseController
-    {
-        public BankaController()
-        {
+    private readonly IMapper _mapper;
+    private readonly IBankaService _bankaService;
 
-        }
+    public BankaController(IMapper mapper, IBankaService bankaService)
+    {
+        _mapper = mapper;
+        _bankaService = bankaService;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> All()
+    {
+        var entities = await _bankaService.GetBankalarWithSube();
+        var dtos = _mapper.Map<List<BankaDto>>(entities.ToList());
+        return CreateActionResult(CustomResponseDto<List<BankaDto>>.Success(200, dtos));
     }
 }

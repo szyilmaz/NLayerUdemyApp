@@ -10,5 +10,7 @@ namespace NLayer.Core.Entities
     {
         public HareketTipi HareketTipi { get; set; }
         public decimal Tutar { get; set; }
+        public string Aciklama { get; set; }
+        public DateTime Tarih { get; set; }
     }
 }

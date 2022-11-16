@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NLayer.Repository;
 
@@ -11,9 +12,10 @@ using NLayer.Repository;
 namespace NLayer.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221115114005_hareketAciklama")]
+    partial class hareketAciklama
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +23,6 @@ namespace NLayer.Repository.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("HesapHesapTipi", b =>
-                {
-                    b.Property<int>("HesapTipleriId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HesaplarId")
-                        .HasColumnType("int");
-
-                    b.HasKey("HesapTipleriId", "HesaplarId");
-
-                    b.HasIndex("HesaplarId");
-
-                    b.ToTable("HesapHesapTipi");
-                });
 
             modelBuilder.Entity("NLayer.Core.Category", b =>
                 {
@@ -110,9 +97,6 @@ namespace NLayer.Repository.Migrations
                     b.Property<int?>("HesapId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Tarih")
-                        .HasColumnType("datetime2");
-
                     b.Property<decimal>("Tutar")
                         .HasColumnType("decimal(18,2)");
 
@@ -152,6 +136,9 @@ namespace NLayer.Repository.Migrations
                     b.Property<int?>("DovizTipiId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("HesapTipiId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Kodu")
                         .HasColumnType("nvarchar(max)");
 
@@ -164,6 +151,8 @@ namespace NLayer.Repository.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DovizTipiId");
+
+                    b.HasIndex("HesapTipiId");
 
                     b.HasIndex("MusteriId");
 
@@ -240,34 +229,13 @@ namespace NLayer.Repository.Migrations
                     b.Property<int?>("LokasyonId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SubeTipiId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("BankaId");
 
                     b.HasIndex("LokasyonId");
 
-                    b.HasIndex("SubeTipiId");
-
                     b.ToTable("Subeler");
-                });
-
-            modelBuilder.Entity("NLayer.Core.Entities.SubeTipi", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Adi")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SubeTipleri");
                 });
 
             modelBuilder.Entity("NLayer.Core.Product", b =>
@@ -333,21 +301,6 @@ namespace NLayer.Repository.Migrations
                     b.ToTable("ProductFeatures");
                 });
 
-            modelBuilder.Entity("HesapHesapTipi", b =>
-                {
-                    b.HasOne("NLayer.Core.Entities.HesapTipi", null)
-                        .WithMany()
-                        .HasForeignKey("HesapTipleriId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("NLayer.Core.Entities.Hesap", null)
-                        .WithMany()
-                        .HasForeignKey("HesaplarId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("NLayer.Core.Entities.Hareket", b =>
                 {
                     b.HasOne("NLayer.Core.Entities.HareketTipi", "HareketTipi")
@@ -367,6 +320,10 @@ namespace NLayer.Repository.Migrations
                         .WithMany()
                         .HasForeignKey("DovizTipiId");
 
+                    b.HasOne("NLayer.Core.Entities.HesapTipi", "HesapTipi")
+                        .WithMany()
+                        .HasForeignKey("HesapTipiId");
+
                     b.HasOne("NLayer.Core.Entities.Musteri", null)
                         .WithMany("Hesaplar")
                         .HasForeignKey("MusteriId");
@@ -376,6 +333,8 @@ namespace NLayer.Repository.Migrations
                         .HasForeignKey("SubeId");
 
                     b.Navigation("DovizTipi");
+
+                    b.Navigation("HesapTipi");
                 });
 
             modelBuilder.Entity("NLayer.Core.Entities.Sube", b =>
@@ -388,13 +347,7 @@ namespace NLayer.Repository.Migrations
                         .WithMany()
                         .HasForeignKey("LokasyonId");
 
-                    b.HasOne("NLayer.Core.Entities.SubeTipi", "SubeTipi")
-                        .WithMany()
-                        .HasForeignKey("SubeTipiId");
-
                     b.Navigation("Lokasyon");
-
-                    b.Navigation("SubeTipi");
                 });
 
             modelBuilder.Entity("NLayer.Core.Product", b =>

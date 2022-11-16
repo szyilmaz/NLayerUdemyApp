@@ -9,5 +9,6 @@ namespace NLayer.Core.Entities
     public class HesapTipi : BankAppBaseEntity
     {
         public string Adi { get; set; }
+        public List<Hesap> Hesaplar { get; set; }
     }
 }

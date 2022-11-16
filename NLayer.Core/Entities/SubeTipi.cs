@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace NLayer.Core.Entities
 {
-    public enum MusteriTipi
+    public class SubeTipi : BankAppBaseEntity
     {
-        Bireysel = 1,
-        Kurumsal = 2
+        public string Adi { get; set; }
     }
 }

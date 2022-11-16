@@ -9,7 +9,7 @@ namespace NLayer.Core.Entities
     public class Hesap : BankAppBaseEntity
     {
         public string Kodu { get; set; }
-        public HesapTipi HesapTipi { get; set; }
+        public List<HesapTipi> HesapTipleri { get; set; }
         public DovizTipi DovizTipi { get; set; }
         public List<Hareket> Hareketler { get; set; }
     }
