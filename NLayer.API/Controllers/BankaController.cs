@@ -19,7 +19,7 @@ public class BankaController : CustomBaseController
     [HttpGet]
     public async Task<IActionResult> All(int MusteriId, int HareketTipId)
     {
-        var entities = await _bankaService.GetHareketler(MusteriId,HareketTipId);
+        var entities = await _bankaService.GetHareketler(MusteriId, HareketTipId);
         return CreateActionResult(CustomResponseDto<List<DetailedHareketDto>>.Success(200, entities));
     }
 
@@ -45,5 +45,15 @@ public class BankaController : CustomBaseController
         var entities = await _bankaService.GetSubeTipi_LokasyonMusteriDovizGrupluHareketToplami(SubeId);
 
         return CreateActionResult(CustomResponseDto<decimal>.Success(200, entities));
+    }
+
+    [HttpGet("GetHesapTipleri_AyYilGrupluHareketToplami")]
+    public async Task<IActionResult> GetHesapTipleri_AyYilGrupluHareketToplami(string hesapTipleri)
+    {
+        var liste = hesapTipleri.Split(',').Select(c=> int.Parse(c)).ToList();
+
+        var entities = await _bankaService.GetHesapTipleri_AyYilGrupluHareketToplami(liste);
+
+        return CreateActionResult(CustomResponseDto<List<string>>.Success(200, entities));
     }
 }

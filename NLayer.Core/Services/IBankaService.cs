@@ -9,5 +9,6 @@ namespace NLayer.Core.Services
         decimal GetHareketToplam(int MusteriId, int HareketTipId);
         Task<decimal> GetBakiye(int MusteriId);
         Task<decimal> GetSubeTipi_LokasyonMusteriDovizGrupluHareketToplami(int SubeTipiID);
+        Task<List<string>> GetHesapTipleri_AyYilGrupluHareketToplami(List<int> HesapTipleri);
     }
 }
