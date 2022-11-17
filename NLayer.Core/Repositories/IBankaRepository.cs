@@ -4,6 +4,6 @@ namespace NLayer.Core.Repositories
 {
     public interface IBankaRepository : IGenericRepository<Banka>
     {
-        Task<List<Banka>> GetBankalarWithSube();
+        IQueryable<DetailedHareket> GetHareketler();
     }
 }

@@ -32,6 +32,10 @@ namespace NLayer.Service.Mapping
             CreateMap<Musteri, MusteriDto>();
 
             CreateMap<HareketTipi, HareketTipiDto>();
+
+            CreateMap<HesapTipi, HesapTipiDto>();
+
+            CreateMap<DetailedHareket, DetailedHareketDto>().ReverseMap();
         }
     }
 }

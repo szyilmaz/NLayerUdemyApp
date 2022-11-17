@@ -17,10 +17,33 @@ public class BankaController : CustomBaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> All()
+    public async Task<IActionResult> All(int MusteriId, int HareketTipId)
     {
-        var entities = await _bankaService.GetBankalarWithSube();
-        var dtos = _mapper.Map<List<BankaDto>>(entities.ToList());
-        return CreateActionResult(CustomResponseDto<List<BankaDto>>.Success(200, dtos));
+        var entities = await _bankaService.GetHareketler(MusteriId,HareketTipId);
+        return CreateActionResult(CustomResponseDto<List<DetailedHareketDto>>.Success(200, entities));
+    }
+
+    [HttpGet("Toplam")]
+    public IActionResult Toplam(int MusteriId, int HareketTipId)
+    {
+        var entities = _bankaService.GetHareketToplam(MusteriId, HareketTipId);
+
+        return CreateActionResult(CustomResponseDto<decimal>.Success(200, entities));
+    }
+
+    [HttpGet("Bakiye")]
+    public async Task<IActionResult> Bakiye(int MusteriId)
+    {
+        var entities = await _bankaService.GetBakiye(MusteriId);
+
+        return CreateActionResult(CustomResponseDto<decimal>.Success(200, entities));
+    }
+
+    [HttpGet("GetSubeTipi_LokasyonMusteriDovizGrupluHareketToplami")]
+    public async Task<IActionResult> GetSubeTipi_LokasyonMusteriDovizGrupluHareketToplami(int SubeId)
+    {
+        var entities = await _bankaService.GetSubeTipi_LokasyonMusteriDovizGrupluHareketToplami(SubeId);
+
+        return CreateActionResult(CustomResponseDto<decimal>.Success(200, entities));
     }
 }

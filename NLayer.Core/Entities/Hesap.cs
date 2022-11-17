@@ -10,6 +10,7 @@ namespace NLayer.Core.Entities
     {
         public string Kodu { get; set; }
         public List<HesapTipi> HesapTipleri { get; set; }
+        public int DovizTipiId { get; set; }
         public DovizTipi DovizTipi { get; set; }
         public List<Hareket> Hareketler { get; set; }
         public int MusteriId { get; set; }
