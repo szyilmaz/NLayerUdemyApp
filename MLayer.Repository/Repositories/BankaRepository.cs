@@ -3,6 +3,7 @@ using NLayer.Core;
 using NLayer.Core.DTOs;
 using NLayer.Core.Entities;
 using NLayer.Core.Repositories;
+using NLayer.Repository.Migrations;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace NLayer.Repository.Repositories
@@ -54,6 +55,7 @@ namespace NLayer.Repository.Repositories
 
             return query;
         }
+
 
     }
 }

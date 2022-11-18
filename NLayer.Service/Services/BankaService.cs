@@ -75,7 +75,7 @@ namespace NLayer.Service.Services
             return giris - cikis;
         }
 
-        public async Task<decimal> GetSubeTipi_LokasyonMusteriDovizGrupluHareketToplami(int SubeTipiID)
+        public async Task<List<string>> GetSubeTipi_LokasyonMusteriDovizGrupluHareketToplami(int SubeTipiID)
         {
             var query = _bankaRepository.GetHareketler();
 
@@ -83,17 +83,24 @@ namespace NLayer.Service.Services
                 .Where(c => c.SubeTipiId == SubeTipiID)
                 .GroupBy(c => new
                 {
+                    c.SubeTipiAdi,
                     c.LokasyonId,
+                    c.LokasyonAdi,
                     c.MusteriId,
-                    c.DovizTipiId
+                    c.MusteriAdi,
+                    c.DovizTipiId,
+                    c.DovizTipiAdi
                 })
                 .Select(g => new
                 {
-                    TipId = g.Key,
+                    SubeTipiAdi = g.Key.SubeTipiAdi,
+                    Lokasyon = g.Key.LokasyonAdi,
+                    MusteriAdi = g.Key.MusteriAdi,
+                    DovizTipiAdi = g.Key.DovizTipiAdi,
                     Tutar = g.Sum(x => x.Tutar)
                 })
                 .ToListAsync();
-            return sonuc.Sum(c => c.Tutar);
+            return sonuc.Select(c=>c.SubeTipiAdi+ " " + c.Lokasyon + " " + c.MusteriAdi + " " + c.Tutar.ToString("N2") + " " + c.DovizTipiAdi).ToList();
         }
 
         public async Task<List<string>> GetHesapTipleri_AyYilGrupluHareketToplami(List<int> HesapTipleri)
@@ -108,9 +115,11 @@ namespace NLayer.Service.Services
             var sonuc = await query
                 .GroupBy(c => new
                 {
+                    c.MusteriId,
                     c.MusteriAdi,
                     c.HareketTarihi.Month,
                     c.HareketTarihi.Year,
+                    c.DovizTipiId,
                     c.DovizTipiAdi
                 })
                 .Select(g => new
@@ -125,6 +134,134 @@ namespace NLayer.Service.Services
                 .ToListAsync();
 
             return sonuc.Select(c=>c.MusteriAdi + " " + c.Yil+"-"+c.Ay + " " + c.Tutar.ToString("N2") + " " + c.DovizTipi).ToList();
+        }
+
+        public async Task<List<string>> GetTarih_MusteriLokasyonBakiye(DateTime Tarih)
+        {
+            var query = _bankaRepository.GetHareketler();
+
+            var sonuc = await query
+                .Where(c => c.HareketTarihi < Tarih)
+                .GroupBy(c => new
+                {
+                    c.MusteriId,
+                    c.MusteriAdi,
+                    c.LokasyonId,
+                    c.LokasyonAdi,
+                    c.DovizTipiId,
+                    c.DovizTipiAdi
+                })
+                .Select(g => new
+                {
+                    TipId = g.Key,
+                    GirisTutar = g.Where(c=>c.HareketTipId == 3).Sum(x => x.Tutar),
+                    CikisTutar = g.Where(c => c.HareketTipId == 4).Sum(x => x.Tutar),
+                    Bakiye = g.Where(c => c.HareketTipId == 3).Sum(x => x.Tutar)- g.Where(c => c.HareketTipId == 4).Sum(x => x.Tutar),
+                    MusteriAdi = g.Key.MusteriAdi,
+                    DovizTipi = g.Key.DovizTipiAdi,
+                    LokasyonAdi = g.Key.LokasyonAdi
+                }).OrderBy(c => c.MusteriAdi)
+                .ToListAsync();
+
+            return sonuc.Select(c => c.LokasyonAdi + " " + c.MusteriAdi + " " + c.Bakiye.ToString("N2") + " " + c.DovizTipi).ToList();
+        }
+
+        public async Task<List<string>> TumFiltre_HesapHareketleriBakiyeli(HareketFiltreDto Filtre)
+        {
+            var query = _bankaRepository.GetHareketler();
+
+            var sonuc = await query
+                .GroupBy(c => new
+                {
+                    c.MusteriId,
+                    c.MusteriAdi,
+                    c.LokasyonId,
+                    c.LokasyonAdi,
+                    c.DovizTipiId,
+                    c.DovizTipiAdi
+                })
+                .Select(g => new
+                {
+                    TipId = g.Key,
+                    GirisTutar = g.Where(c => c.HareketTipId == 3).Sum(x => x.Tutar),
+                    CikisTutar = g.Where(c => c.HareketTipId == 4).Sum(x => x.Tutar),
+                    Bakiye = g.Where(c => c.HareketTipId == 3).Sum(x => x.Tutar) - g.Where(c => c.HareketTipId == 4).Sum(x => x.Tutar),
+                    MusteriAdi = g.Key.MusteriAdi,
+                    DovizTipi = g.Key.DovizTipiAdi,
+                    LokasyonAdi = g.Key.LokasyonAdi
+                }).OrderBy(c => c.MusteriAdi)
+                .ToListAsync();
+
+            return sonuc.Select(c => c.LokasyonAdi + " " + c.MusteriAdi + " " + c.Bakiye.ToString("N2") + " " + c.DovizTipi).ToList();
+        }
+
+        public async Task<List<string>> HesapTipiDovizTipi_SubeVeyaLokasyonBazliHesapToplamlari(int HesapTipiId, int DovizTipiId, int SubeLokasyon)
+        {
+            var query = _bankaRepository.GetHareketler();
+
+            query = query.Where(c => c.HesapTipleri.Where(c => c.Id == HesapTipiId).Any() && c.DovizTipiId == DovizTipiId);
+
+            List<string> sonuc = new List<string>();
+
+            if (SubeLokasyon == 1)//şube
+            {
+                var sonucQuery = await query
+               .GroupBy(c => new
+               {
+                   c.SubeId,
+                   c.SubeAdi,
+                   c.DovizTipiId,
+                   c.DovizTipiAdi
+               })
+               .Select(g => new
+               {
+                   TipId = g.Key,
+                   GirisTutar = g.Where(c => c.HareketTipId == 3).Sum(x => x.Tutar),
+                   CikisTutar = g.Where(c => c.HareketTipId == 4).Sum(x => x.Tutar),
+                   Bakiye = g.Where(c => c.HareketTipId == 3).Sum(x => x.Tutar) - g.Where(c => c.HareketTipId == 4).Sum(x => x.Tutar),
+                   DovizTipi = g.Key.DovizTipiAdi,
+                   SubeAdi = g.Key.SubeAdi
+               }).OrderBy(c => c.SubeAdi)
+               .ToListAsync();
+
+                sonuc = sonucQuery.Select(c => "Şube : " +c.SubeAdi + " " + c.Bakiye.ToString("N2") + " " + c.DovizTipi).ToList();
+
+            }
+            else
+            {
+                var sonucQuery = await query
+              .GroupBy(c => new
+              {
+                  c.LokasyonId,
+                  c.LokasyonAdi,
+                  c.DovizTipiId,
+                  c.DovizTipiAdi
+              })
+              .Select(g => new
+              {
+                  TipId = g.Key,
+                  GirisTutar = g.Where(c => c.HareketTipId == 3).Sum(x => x.Tutar),
+                  CikisTutar = g.Where(c => c.HareketTipId == 4).Sum(x => x.Tutar),
+                  Bakiye = g.Where(c => c.HareketTipId == 3).Sum(x => x.Tutar) - g.Where(c => c.HareketTipId == 4).Sum(x => x.Tutar),
+                  DovizTipi = g.Key.DovizTipiAdi,
+                  LokasyonAdi = g.Key.LokasyonAdi
+              }).OrderBy(c => c.LokasyonAdi)
+              .ToListAsync();
+
+                sonuc = sonucQuery.Select(c => "Lokasyon : " +c.LokasyonAdi + " " + c.Bakiye.ToString("N2") + " " + c.DovizTipi).ToList();
+            }
+
+            return sonuc;
+        }
+
+
+        public async Task<List<string>> TarihBanka_DovizHesapTipiGrupluBakiye(DateTime Tarih, int BankaId)
+        {
+            var query = _bankaRepository.GetHareketler();
+
+            var sonuc = await query.ToListAsync();
+
+            return new List<string>();
         }
     }
 }
