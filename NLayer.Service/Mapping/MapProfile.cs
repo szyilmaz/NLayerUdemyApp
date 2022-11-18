@@ -35,6 +35,8 @@ namespace NLayer.Service.Mapping
 
             CreateMap<HesapTipi, HesapTipiDto>();
 
+            CreateMap<HesapHesapTipi, HesapHesapTipiDto>();
+
             CreateMap<DetailedHareket, DetailedHareketDto>().ReverseMap();
         }
     }

@@ -61,12 +61,14 @@ public class BankaController : CustomBaseController
     public async Task<IActionResult> TarihBanka_DovizHesapTipiGrupluBakiye(DateTime Tarih, int BankaId)
     {
         var entities = await _bankaService.TarihBanka_DovizHesapTipiGrupluBakiye(Tarih , BankaId);
-        return CreateActionResult(CustomResponseDto<List<string>>.Success(200, null));
+        return CreateActionResult(CustomResponseDto<List<string>>.Success(200, entities));
     }
 
     [HttpGet("07_HesapTipiDoviz_LokasyonIcinHesabindaEnCokParaOlanMusteriler")]
-    public async Task<IActionResult> HesapTipiDoviz_LokasyonIcinHesabindaEnCokParaOlanMusteriler()
+    public async Task<IActionResult> HesapTipiDoviz_LokasyonIcinHesabindaEnCokParaOlanMusteriler(int HesapTipi, int DovizTipiId)
     {
-        return CreateActionResult(CustomResponseDto<List<string>>.Success(200, null));
+        var entities = await _bankaService.HesapTipiDoviz_LokasyonIcinHesabindaEnCokParaOlanMusteriler(HesapTipi, DovizTipiId);
+
+        return CreateActionResult(CustomResponseDto<List<string>>.Success(200, entities));
     }
 }

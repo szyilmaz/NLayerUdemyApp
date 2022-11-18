@@ -26,6 +26,7 @@ namespace NLayer.Repository
         public DbSet<DovizTipi> DovizTipleri { get; set; }
         public DbSet<HareketTipi> HareketTipleri { get; set; }
         public DbSet<HesapTipi> HesapTipleri { get; set; }
+        public DbSet<HesapHesapTipi> HesapHesapTipleri { get; set; }
         public DbSet<SubeTipi> SubeTipleri { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

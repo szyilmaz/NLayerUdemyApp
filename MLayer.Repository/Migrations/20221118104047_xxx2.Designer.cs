@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NLayer.Repository;
 
@@ -11,9 +12,10 @@ using NLayer.Repository;
 namespace NLayer.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221118104047_xxx2")]
+    partial class xxx2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -159,13 +161,21 @@ namespace NLayer.Repository.Migrations
 
             modelBuilder.Entity("NLayer.Core.Entities.HesapHesapTipi", b =>
                 {
-                    b.Property<int>("HesapId")
+                    b.Property<int>("HesaplarId")
                         .HasColumnType("int");
 
-                    b.Property<int>("HesapTipiId")
+                    b.Property<int>("HesapTipleriId")
                         .HasColumnType("int");
 
-                    b.HasKey("HesapId", "HesapTipiId");
+                    b.Property<int?>("HesapId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("HesapTipiId")
+                        .HasColumnType("int");
+
+                    b.HasKey("HesaplarId", "HesapTipleriId");
+
+                    b.HasIndex("HesapId");
 
                     b.HasIndex("HesapTipiId");
 
@@ -381,15 +391,11 @@ namespace NLayer.Repository.Migrations
                 {
                     b.HasOne("NLayer.Core.Entities.Hesap", "Hesap")
                         .WithMany("HesapTipleri")
-                        .HasForeignKey("HesapId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("HesapId");
 
                     b.HasOne("NLayer.Core.Entities.HesapTipi", "HesapTipi")
                         .WithMany("HesapTipleri")
-                        .HasForeignKey("HesapTipiId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("HesapTipiId");
 
                     b.Navigation("Hesap");
 

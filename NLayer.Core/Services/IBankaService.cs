@@ -13,5 +13,6 @@ namespace NLayer.Core.Services
         Task<List<string>> GetTarih_MusteriLokasyonBakiye(DateTime Tarih);
         Task<List<string>> HesapTipiDovizTipi_SubeVeyaLokasyonBazliHesapToplamlari(int HesapTipiId, int DovizTipiId, int SubeLokasyon);
         Task<List<string>> TarihBanka_DovizHesapTipiGrupluBakiye(DateTime Tarih, int BankaId);
+        Task<List<string>> HesapTipiDoviz_LokasyonIcinHesabindaEnCokParaOlanMusteriler(int HesapTipi, int DovizTipiId);
     }
 }

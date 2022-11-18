@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NLayer.Repository;
 
@@ -11,9 +12,10 @@ using NLayer.Repository;
 namespace NLayer.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221118102341_xxx1")]
+    partial class xxx1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,21 +159,6 @@ namespace NLayer.Repository.Migrations
                     b.ToTable("Hesaplar");
                 });
 
-            modelBuilder.Entity("NLayer.Core.Entities.HesapHesapTipi", b =>
-                {
-                    b.Property<int>("HesapId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HesapTipiId")
-                        .HasColumnType("int");
-
-                    b.HasKey("HesapId", "HesapTipiId");
-
-                    b.HasIndex("HesapTipiId");
-
-                    b.ToTable("HesapHesapTipleri");
-                });
-
             modelBuilder.Entity("NLayer.Core.Entities.HesapTipi", b =>
                 {
                     b.Property<int>("Id")
@@ -183,7 +170,12 @@ namespace NLayer.Repository.Migrations
                     b.Property<string>("Adi")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("HesapId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("HesapId");
 
                     b.ToTable("HesapTipleri");
                 });
@@ -377,23 +369,11 @@ namespace NLayer.Repository.Migrations
                     b.Navigation("Sube");
                 });
 
-            modelBuilder.Entity("NLayer.Core.Entities.HesapHesapTipi", b =>
+            modelBuilder.Entity("NLayer.Core.Entities.HesapTipi", b =>
                 {
-                    b.HasOne("NLayer.Core.Entities.Hesap", "Hesap")
+                    b.HasOne("NLayer.Core.Entities.Hesap", null)
                         .WithMany("HesapTipleri")
-                        .HasForeignKey("HesapId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("NLayer.Core.Entities.HesapTipi", "HesapTipi")
-                        .WithMany("HesapTipleri")
-                        .HasForeignKey("HesapTipiId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Hesap");
-
-                    b.Navigation("HesapTipi");
+                        .HasForeignKey("HesapId");
                 });
 
             modelBuilder.Entity("NLayer.Core.Entities.Sube", b =>
@@ -457,11 +437,6 @@ namespace NLayer.Repository.Migrations
                 {
                     b.Navigation("Hareketler");
 
-                    b.Navigation("HesapTipleri");
-                });
-
-            modelBuilder.Entity("NLayer.Core.Entities.HesapTipi", b =>
-                {
                     b.Navigation("HesapTipleri");
                 });
 

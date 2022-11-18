@@ -17,6 +17,8 @@ namespace NLayer.Core.DTOs
         public int HesapId { get; set; }
         public string HesapKodu { get; set; }
         public List<HesapTipiDto> HesapTipleri { get; set; }
+        public int HesapTipiId { get; set; }
+        public string HesapTipiAdi { get; set; }
         public int DovizTipiId { get; set; }
         public string DovizTipiAdi { get; set; }
         public int MusteriId { get; set; }
