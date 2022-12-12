@@ -1,0 +1,11 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using NLayer.Core.Entities
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+
+    <h1>Yetki Gerektiren Rapor Ekranı</h1>
+    <form class="form-inline" asp-controller="Account" asp-action="Logout" method="post">
+        <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
+    </form>
+

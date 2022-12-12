@@ -1,0 +1,52 @@
+﻿@using NLayer.Core.DTOs
+@model LoginDto
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+
+@if (User.Identity.Name == null)
+{
+    <div class="row">
+        <div class="col-md-4">
+            <section>
+                <form id="account" method="post">
+                    <h4>Use a local account to log in.</h4>
+                    <hr />
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Username"></label>
+                        <input asp-for="Username" class="form-control" />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password"></label>
+                        <input type="password" asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label asp-for="RememberMe">
+                                <input asp-for="RememberMe" />
+                                @Html.DisplayNameFor(m => m.RememberMe)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Log in</button>
+                    </div>
+                </form>
+            </section>
+            <a asp-controller="Account" asp-action="Register">Register</a>
+        </div>
+    </div>
+}
+else
+{
+    <h1>Merhaba @User.Identity.Name</h1>
+    <form class="form-inline" asp-controller="Account" asp-action="Logout" method="post">
+        <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
+    </form>
+}
+

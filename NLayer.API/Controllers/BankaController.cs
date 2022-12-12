@@ -44,9 +44,10 @@ public class BankaController : CustomBaseController
     }
 
     [HttpGet("04_TumFiltre_HesapHareketleriBakiyeli")]
-    public async Task<IActionResult> TumFiltre_HesapHareketleriBakiyeli(HareketFiltreDto Filtre)
+    public async Task<IActionResult> TumFiltre_HesapHareketleriBakiyeli([FromQuery] HareketFiltreDto Filtre)
     {
-        return CreateActionResult(CustomResponseDto<List<string>>.Success(200, null));
+        var entities = await _bankaService.TumFiltre_HesapHareketleriBakiyeli(Filtre);
+        return CreateActionResult(CustomResponseDto<List<string>>.Success(200, entities));
     }
 
     [HttpGet("05_HesapTipiDovizTipi_SubeVeyaLokasyonBazliHesapToplamlari")]
@@ -54,7 +55,7 @@ public class BankaController : CustomBaseController
     {
         var entities = await _bankaService.HesapTipiDovizTipi_SubeVeyaLokasyonBazliHesapToplamlari(HesapTipiId, DovizTipiId, SubeLokasyon);
 
-        return CreateActionResult(CustomResponseDto<List<string>>.Success(200, null));
+        return CreateActionResult(CustomResponseDto<List<string>>.Success(200, entities));
     }
 
     [HttpGet("06_TarihBanka_DovizHesapTipiGrupluBakiye")]

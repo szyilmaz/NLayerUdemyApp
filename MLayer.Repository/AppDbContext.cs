@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NLayer.Core;
 using NLayer.Core.Entities;
@@ -6,7 +8,7 @@ using System.Reflection;
 
 namespace NLayer.Repository
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<User>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -81,10 +83,15 @@ namespace NLayer.Repository
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<IdentityRole>()
+                .HasData(
+                    new IdentityRole { Name = "Member", NormalizedName = "MEMBER" },
+                    new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" }
+                );
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
-            base.OnModelCreating(modelBuilder);
         }
     }
 }

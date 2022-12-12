@@ -10,6 +10,7 @@ using NLayer.Core.UnitOfWorks;
 using NLayer.Repository.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
 namespace NLayer.Service.Services
@@ -77,6 +78,32 @@ namespace NLayer.Service.Services
             return giris - cikis;
         }
 
+        private decimal GetBakiye(List<DetailedHareket> hareketler, int HesapId, DateTime Tarih)
+        {
+            decimal bakiye = 0;
+
+            var sonuc = hareketler.Where(c => c.HesapId == HesapId && c.HareketTarihi <= Tarih).GroupBy(c => c.HareketTipId).Select(g => new { TipId = g.Key, Tutar = g.Sum(x => x.Tutar)});
+
+            if (sonuc != null && sonuc.Count() > 0)
+            {
+                decimal giris = 0;
+                decimal cikis = 0;
+
+                if (sonuc.Where(c => c.TipId == 3).FirstOrDefault() != null)
+                {
+                    giris = sonuc.Where(c => c.TipId == 3).FirstOrDefault().Tutar;
+                }
+
+                if (sonuc.Where(c => c.TipId == 4).FirstOrDefault() != null)
+                {
+                    cikis = sonuc.Where(c => c.TipId == 4).FirstOrDefault().Tutar;
+                }
+                bakiye = giris - cikis;
+            }
+
+            return bakiye;
+        }
+
         public async Task<List<string>> GetSubeTipi_LokasyonMusteriDovizGrupluHareketToplami(int SubeTipiID)
         {
             var query = _bankaRepository.GetHareketler();
@@ -109,10 +136,8 @@ namespace NLayer.Service.Services
         {
             var query = _bankaRepository.GetHareketler();
 
-            foreach (var item in HesapTipleri)
-            {
-                query = query.Where(c => c.HesapTipleri.Any(d => d.HesapTipi.Id == item));
-            }
+            //liste içinde liste aramasyon
+            query = query.Where(c => c.HesapTipleri.Any(p => HesapTipleri.Contains(p.HesapTipiId)));
 
             var sonuc = await query
                 .GroupBy(c => new
@@ -131,11 +156,27 @@ namespace NLayer.Service.Services
                     Ay = g.Key.Month,
                     Tutar = g.Sum(x => x.Tutar),
                     MusteriAdi = g.Key.MusteriAdi,
-                    DovizTipi = g.Key.DovizTipiAdi
+                    DovizTipi = g.Key.DovizTipiAdi,
+                    HesapTippleri = "",//ListeyiCevir(query.Where(c => c.MusteriId == g.Key.MusteriId).Select(c => c.HesapTipleri.Distinct().Select(c => c.HesapTipi.Id + "-" + c.HesapTipi.Adi)))
                 }).OrderBy(c=>c.MusteriAdi)
                 .ToListAsync();
 
-            return sonuc.Select(c=>c.MusteriAdi + " " + c.Yil+"-"+c.Ay + " " + c.Tutar.ToString("N2") + " " + c.DovizTipi).ToList();
+            return sonuc.Select(c => c.MusteriAdi + " " + c.Yil+"-"+c.Ay + " " + c.Tutar.ToString("N2") + " " + c.DovizTipi + " " + c.HesapTippleri).ToList();
+        }
+
+        private string ListeyiCevir(IEnumerable<IEnumerable<string>> liste)
+        { 
+            string sonuc = "";
+            foreach (var item in liste)
+            {
+                sonuc = "";
+                foreach (var itemInner in item)
+                {
+                    sonuc += itemInner + ",";
+                }
+            }
+            
+            return sonuc;
         }
 
         public async Task<List<string>> GetTarih_MusteriLokasyonBakiye(DateTime Tarih)
@@ -172,29 +213,61 @@ namespace NLayer.Service.Services
         {
             var query = _bankaRepository.GetHareketler();
 
-            var sonuc = await query
-                .GroupBy(c => new
-                {
-                    c.MusteriId,
-                    c.MusteriAdi,
-                    c.LokasyonId,
-                    c.LokasyonAdi,
-                    c.DovizTipiId,
-                    c.DovizTipiAdi
-                })
-                .Select(g => new
-                {
-                    TipId = g.Key,
-                    GirisTutar = g.Where(c => c.HareketTipId == 3).Sum(x => x.Tutar),
-                    CikisTutar = g.Where(c => c.HareketTipId == 4).Sum(x => x.Tutar),
-                    Bakiye = g.Where(c => c.HareketTipId == 3).Sum(x => x.Tutar) - g.Where(c => c.HareketTipId == 4).Sum(x => x.Tutar),
-                    MusteriAdi = g.Key.MusteriAdi,
-                    DovizTipi = g.Key.DovizTipiAdi,
-                    LokasyonAdi = g.Key.LokasyonAdi
-                }).OrderBy(c => c.MusteriAdi)
-                .ToListAsync();
+            if (Filtre.BankaId != null)
+            {
+                query = query.Where(c=> c.BankaId == Filtre.BankaId.Value);
+            }
 
-            return sonuc.Select(c => c.LokasyonAdi + " " + c.MusteriAdi + " " + c.Bakiye.ToString("N2") + " " + c.DovizTipi).ToList();
+            if (Filtre.DovizTipiId != null)
+            {
+                query = query.Where(c => c.DovizTipiId == Filtre.DovizTipiId.Value);
+            }
+
+            if (Filtre.HesapTipiId != null)
+            {
+                query = query.Where(c => c.HesapTipleri.Where(d=> d.HesapTipiId == Filtre.HesapTipiId.Value).Any());
+            }
+
+            if (Filtre.MusteriId != null)
+            {
+                query = query.Where(c => c.MusteriId == Filtre.MusteriId.Value);
+            }
+
+            if (Filtre.LokasyonId != null)
+            {
+                query = query.Where(c => c.LokasyonId == Filtre.LokasyonId.Value);
+            }
+
+            if (Filtre.SubeId != null)
+            {
+                query = query.Where(c => c.SubeId == Filtre.SubeId.Value);
+            }
+
+            if (Filtre.HesapId != null)
+            {
+                query = query.Where(c => c.HesapId == Filtre.HesapId.Value);
+            }
+
+            if (Filtre.Bitis != null)
+            {
+                query = query.Where(c => c.HareketTarihi < Filtre.Bitis.Value);
+            }
+
+            query = query.OrderBy(c => c.HesapId).ThenBy(c => c.HareketTarihi);
+
+            var sonuc = await query.ToListAsync();
+
+            for (int i = 0; i < sonuc.Count; i++)
+            {
+                sonuc[i].Bakiye = GetBakiye(sonuc, sonuc[i].HesapId, sonuc[i].HareketTarihi);
+            }
+
+            if (Filtre.Baslangic != null)
+            {
+                sonuc = sonuc.Where(c => c.HareketTarihi >= Filtre.Baslangic.Value).ToList();
+            }
+
+            return sonuc.Select(c => c.BankaAdi + " " + c.SubeAdi + " " + c.LokasyonAdi + " " + c.MusteriAdi + " " + c.HesapKodu+ " " + c.HareketTarihi.ToString("dd.MM.yyyy") + " "+ c.HareketTipAdi + " Hareket Tutarı: "+ c.Tutar.ToString("N2") + " Bakiye: " + c.Bakiye.ToString("N2") +" " + c.DovizTipiAdi).ToList();
         }
 
         public async Task<List<string>> HesapTipiDovizTipi_SubeVeyaLokasyonBazliHesapToplamlari(int HesapTipiId, int DovizTipiId, int SubeLokasyon)
@@ -313,7 +386,7 @@ namespace NLayer.Service.Services
 
             var sonuc = await res.ToListAsync();
 
-            return sonuc.Select(c => c.MusteriAdi + " " + c.Bakiye.ToString("N2") + " " + c.DovizTipi).ToList();
+            return sonuc.Select(c => c.LokasyonAdi + " " +  c.MusteriAdi + " " + c.Bakiye.ToString("N2") + " " + c.DovizTipi).ToList();
 
         }
     }

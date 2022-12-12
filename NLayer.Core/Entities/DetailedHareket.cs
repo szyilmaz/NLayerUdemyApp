@@ -31,6 +31,7 @@ namespace NLayer.Core.Entities
         public decimal Tutar { get; set; }
         public string Aciklama { get; set; }
         public DateTime HareketTarihi { get; set; }
+        public decimal Bakiye { get; set; }
     }
 }
 

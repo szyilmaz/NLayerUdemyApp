@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLayer.Service", "NLayer.Se
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLayer.API", "NLayer.API\NLayer.API.csproj", "{2C54222D-AC3F-47BA-83EB-62D7E0682D8D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLayer.MVCApp", "NLayer.MVCApp\NLayer.MVCApp.csproj", "{8D53489C-B9AB-4BFA-98C9-467B347B564B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLayer.MVCApp_Ind", "NLayer.MVCApp_Ind\NLayer.MVCApp_Ind.csproj", "{1E032A72-62F4-4B82-876A-A1201D3EFF80}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{2C54222D-AC3F-47BA-83EB-62D7E0682D8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C54222D-AC3F-47BA-83EB-62D7E0682D8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C54222D-AC3F-47BA-83EB-62D7E0682D8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D53489C-B9AB-4BFA-98C9-467B347B564B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D53489C-B9AB-4BFA-98C9-467B347B564B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D53489C-B9AB-4BFA-98C9-467B347B564B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D53489C-B9AB-4BFA-98C9-467B347B564B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E032A72-62F4-4B82-876A-A1201D3EFF80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E032A72-62F4-4B82-876A-A1201D3EFF80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E032A72-62F4-4B82-876A-A1201D3EFF80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E032A72-62F4-4B82-876A-A1201D3EFF80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
